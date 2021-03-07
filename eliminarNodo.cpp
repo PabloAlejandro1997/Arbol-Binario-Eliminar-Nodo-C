@@ -47,8 +47,83 @@ void preorden(nodo raiz){
 	}
 }
 
-void eliminarNodo(int dato,nodo &arbol){
+void inorden(nodo raiz){
+	if(raiz != NULL){
+		inorden(raiz->izquierda);
+		cout<<raiz->valor<<", ";
+		inorden(raiz->derecha);
+	}
+}
 
+void eliminarNodo(int dato,nodo &arbol){
+	// ----- Fijar Objetivo	----- 
+	bool existe = false;
+	nodo i = arbol;
+	nodo objetivo,previo = NULL;
+	
+	while(i != NULL && existe == false){
+		if(i->valor == dato){
+			objetivo= i;
+			existe = true;
+		}else{
+			previo = i;	
+		}
+		
+		i = ( i->valor > dato ? i->izquierda : 	i->derecha );	
+	}
+	
+	// ----- CASO 1 : Nodo Hoja	----
+	if((objetivo->izquierda==NULL) && (objetivo->derecha == NULL)){
+		if(previo->derecha == objetivo){
+			previo->derecha= NULL;
+		}else{
+			previo->izquierda = NULL;
+		}
+	// ----- CASO 2 : Nodo con 2 hijos 
+	}else if((objetivo->izquierda != NULL)&& (objetivo->derecha != NULL)){
+		
+		nodo j = objetivo->izquierda;
+		nodo previoI = NULL;
+		
+		while(j->derecha != NULL){
+			previoI = j;
+			j = j->derecha;	
+		}
+		
+		if(previoI == NULL){
+			j->derecha = objetivo->derecha;
+		}else{
+			j->derecha = objetivo->derecha;
+			previoI->derecha = j->izquierda;
+			j->izquierda = objetivo->izquierda;
+		}
+		
+		if(previo == NULL){	//Raiz del arbol 
+			arbol = j;
+		}else if(dato < previo->valor ){
+			previo->izquierda = j;
+		}else{
+			previo->derecha = j;
+		}
+		
+		objetivo->derecha = NULL;
+		objetivo->izquierda = NULL;
+	// ----- CASO 3 : Nodo con 1 hijo ( derecho / izquierdo )
+	}else if( (objetivo->derecha != NULL)&&(objetivo->izquierda == NULL) ){
+		if(dato > previo->valor ){
+			previo->derecha = objetivo->derecha;	
+		}else{
+			previo->izquierda = objetivo->derecha;
+		}
+	
+	}else if((objetivo->izquierda != NULL)&&(objetivo->derecha == NULL)){
+		if(dato > previo->valor ){
+			previo->derecha = objetivo->izquierda;
+		}else{
+			previo->izquierda = objetivo->izquierda;
+		}
+		
+	}
 }
 
 int main(){
@@ -80,6 +155,27 @@ int main(){
 	eliminarNodo(datoEliminar,arbol);
 	cout<<endl;
 	preorden(arbol);
+	
+	cout<<endl;
+	inorden(arbol);
+	
+cout<<endl;	
+cout<<endl;
+cout<<"****  ****  ****** ******   **   *     *   **   *     * *****  ******      ****** ****** *     *"<<endl;
+cout<<"*   * *   * *    * *       *  *  **   **  *  *  **    * *    * *    *      *      *    * **    *"<<endl;
+cout<<"*   * *   * *    * *      *    * * * * * *    * * *   * *    * *    *      *      *    * * *   *"<<endl;
+cout<<"****  ****  *    * *  *** ****** *  *  * ****** *  *  * *    * *    *      *      *    * *  *  *"<<endl;
+cout<<"*     * *   *    * *    * *    * *     * *    * *   * * *    * *    *      *      *    * *   * *"<<endl;
+cout<<"*     *  *  *    * *    * *    * *     * *    * *    ** *    * *    *      *      *    * *    **"<<endl;
+cout<<"*     *   * ****** ****** *    * *     * *    * *     * *****  ******      ****** ****** *     *"<<endl;
+cout<<endl;
+cout<<"****    **   ****  *     ****** "<<endl;
+cout<<"*   *  *  *  *   * *     *    * "<<endl; 
+cout<<"*   * *    * *   * *     *    * "<<endl;
+cout<<"****  ****** ****  *     *    * "<<endl;
+cout<<"*     *    * *   * *     *    * "<<endl;
+cout<<"*     *    * *   * *     *    * "<<endl;
+cout<<"*     *    * ****  ***** ****** "<<endl;
 
 	getch();
 	return 0;
